@@ -1,18 +1,16 @@
 #include <iostream>
+#include <algorithm>
 using namespace std;
-
 
 class Node {
 public:
     int data;
     Node *next;
-
     Node(int data) {
         this->data = data;
         this->next = NULL;
     }
 };
-
 
 class Queue {
 public:
@@ -21,12 +19,10 @@ public:
     int sz;
 
     Queue() {
-        front = NULL;
-        rear = NULL;
+        front = rear = NULL;
         sz = 0;
     }
 
-    
     void push(int data) {
         Node *node = new Node(data);
         if (rear == NULL) {
@@ -38,33 +34,21 @@ public:
         sz++;
     }
 
-    
     void pop() {
         if (front != NULL) {
             front = front->next;
             sz--;
-            if (front == NULL) {
-                rear = NULL;
-            }
+            if (front == NULL) rear = NULL;
         }
     }
 
-    
     int frontElement() {
-        if (front != NULL) {
-            return front->data;
-        }
-        return -1; // если очередь пуста
+        if (front != NULL) return front->data;
+        return -1;
     }
 
-    
     bool empty() {
         return sz == 0;
-    }
-
-    
-    int size() {
-        return sz;
     }
 };
 
@@ -73,26 +57,33 @@ int main() {
     cin >> n;
 
     Queue q;
+    int a[1005] = {0};
 
+   
     for (int i = 0; i < n; i++) {
         int x;
         cin >> x;
         q.push(x);
+        a[i] = x; 
     }
-
-    int idx = 1;
 
     
-    while (!q.empty()) {
-        int val = q.frontElement();
-        q.pop();
-
-        if (idx % 2 != 0) { // если элемент нечётный по счёту
-            cout << val << " ";
-        }
-        idx++;
+    int freq[1001] = {0};
+    for (int i = 0; i < n; i++) {
+        freq[a[i]]++;
     }
 
+    
+    int maxFreq = 0;
+    for (int i = 1; i <= 1000; i++) {
+        if (freq[i] > maxFreq) maxFreq = freq[i];
+    }
+
+    
+    for (int i = 1000; i >= 1; i--) {
+        if (freq[i] == maxFreq) cout << i << " ";
+    }
     cout << endl;
+
     return 0;
 }
