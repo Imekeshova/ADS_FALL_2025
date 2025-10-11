@@ -1,50 +1,42 @@
 #include <iostream>
-#include <vector>
 #include <algorithm>
+#include <vector>
 using namespace std;
 
-int lowerBound(vector<int>& a, int x) {
-    int l = 0, r = a.size();
-    while (l < r) {
-        int m = (l + r) / 2;
-        if (a[m] < x) l = m + 1;
-        else r = m;
+int countIn(const vector<long long>& a, long long L, long long R){
+    if (L > R){
+        return 0;
     }
-    return l;
-}
-
-int upperBound(vector<int>& a, int x) {
-    int l = 0, r = a.size();
-    while (l < r) {
-        int m = (l + r) / 2;
-        if (a[m] <= x) l = m + 1;
-        else r = m;
-    }
-    return l;
-}
-
-int countInRange(vector<int>& a, int L, int R) {
-    if (L > R) return 0;
-    return upperBound(a, R) - lowerBound(a, L);
+    int left = int(lower_bound(a.begin(), a.end(), L) - a.begin());
+    int right = int(upper_bound(a.begin(), a.end(), R) - a.begin());
+    return right - left;
 }
 
 int main() {
     int n, q;
     cin >> n >> q;
 
-    vector<int> a(n);
-    for (int i = 0; i < n; i++) cin >> a[i];
+    vector<long long> a(n);
+
+    for (int i = 0; i < n; i++){
+        cin >> a[i];
+    }
     sort(a.begin(), a.end());
 
-    while (q--) {
-        int l1, r1, l2, r2;
+    while(q--){
+        long long l1, r1, l2, r2;
         cin >> l1 >> r1 >> l2 >> r2;
 
-        int c1 = countInRange(a, l1, r1);
-        int c2 = countInRange(a, l2, r2);
-        int both = countInRange(a, max(l1, l2), min(r1, r2));
+        int c1 = countIn(a, l1, r1);
+        int c2 = countIn(a, l2, r2);
 
-        cout << c1 + c2 - both << "\n";
+        long long L = max(l1, l2);
+        long long R = min(r1, r2);
+        int cBoth = countIn(a, L, R);
+
+        cout << (c1 + c2 - cBoth) << endl;
     }
+
+
     return 0;
 }
